@@ -1,0 +1,40 @@
+# Copy this into your repo as .github/workflows/pr-slop-gate.yml
+#
+# SAFE FIRST ROLLOUT: dry-run=true means it computes + logs a decision but
+# never labels/comments/closes. Watch the Action logs for a cycle, then flip
+# dry-run to false (and only later consider auto-close: true).
+
+name: PR Slop Gate
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited]
+
+permissions:
+  pull-requests: write   # label / comment / close
+  contents: read         # read CONTRIBUTING + changed files
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: allenwu-blip/pr-slop-gate@v0   # pin to a release tag/SHA when published
+        with:
+          # GITHUB_TOKEN is provided automatically.
+          dry-run: "true"               # <-- start safe; flip to "false" later
+
+          # Optional: enable the LLM grader (graded vs your CONTRIBUTING).
+          # Without this the Action runs heuristic-only — still useful.
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+          # False-positive safety. Authors who already had a PR merged are
+          # auto-derived from the repo; add bots / extra trusted logins here.
+          allowlist: |
+            dependabot[bot]
+            renovate[bot]
+
+          # Tuning (defaults shown; raise thresholds to be more lenient).
+          label-threshold: "0.5"
+          comment-threshold: "0.65"
+          close-threshold: "0.85"
+          auto-close: "false"

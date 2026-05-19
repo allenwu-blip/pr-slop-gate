@@ -1,0 +1,40 @@
+name: "Slop-gate misfire report"
+description: "Report a false positive (legit PR flagged) or false negative (slop not caught). Captured verbatim and read exactly as written."
+title: "[misfire] "
+labels: ["pr-slop-gate-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Misfire reports are the single most useful input
+        for tuning the gate. **Your description is stored and read exactly as
+        you write it — it is not summarized or paraphrased.** Be as blunt as
+        you like.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Misfire type
+      options:
+        - "False positive — a legitimate PR was flagged/closed"
+        - "False negative — obvious AI slop was NOT caught"
+        - "Other / not sure"
+    validations:
+      required: true
+  - type: input
+    id: pr
+    attributes:
+      label: PR link (if applicable)
+      placeholder: "https://github.com/owner/repo/pull/123"
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened, in your own words
+      description: "Verbatim. Paste anything relevant — the comment it posted, the diff, your reasoning."
+      placeholder: "This PR was a one-line typo fix from a new contributor and it got auto-closed..."
+    validations:
+      required: true
+  - type: input
+    id: config
+    attributes:
+      label: Your pr-slop-gate config (thresholds/weights/version), if non-default
+      placeholder: "label-threshold: 0.4, grader disabled, v0.1.0"

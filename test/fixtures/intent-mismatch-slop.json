@@ -1,0 +1,28 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event. Hand-authored: the body claims a concrete code fix ('fixes the failing test ... resolves a race condition') but the actual diff is whitespace-only no-op churn — a fabricated-PR tell. Not captured from a real PR.",
+  "action": "opened",
+  "number": 5202,
+  "pull_request": {
+    "number": 5202,
+    "title": "Fix the failing CI test",
+    "body": "This PR fixes the failing test in the scheduler and resolves a race condition that caused intermittent crashes under load. The change makes the suite pass reliably.",
+    "state": "open",
+    "draft": false,
+    "additions": 60,
+    "deletions": 58,
+    "changed_files": 3,
+    "commits": 1,
+    "user": { "login": "fab-ricator", "type": "User" },
+    "head": { "ref": "fix-ci", "sha": "3333333333333333333333333333333333333333" },
+    "base": { "ref": "main", "sha": "4444444444444444444444444444444444444444" },
+    "labels": []
+  },
+  "repository": { "full_name": "acme/widget", "default_branch": "main" },
+  "_files": [
+    { "filename": "src/scheduler.js", "status": "modified", "additions": 20, "deletions": 19, "patch": "@@ -1 +1 @@\n-const t = setTimeout(run, 0);\n+const t = setTimeout(run, 0); \n" },
+    { "filename": "src/queue.js", "status": "modified", "additions": 20, "deletions": 20, "patch": "@@ -1 +1 @@\n-  enqueue(job)\n+ enqueue(job) \n" },
+    { "filename": "src/worker.js", "status": "modified", "additions": 20, "deletions": 19, "patch": "@@ -1 +1 @@\n-process(job);\n+process(job);  \n" }
+  ],
+  "_commits": [{ "commit": { "message": "Fix the failing CI test and race condition" } }],
+  "_diff": ""
+}

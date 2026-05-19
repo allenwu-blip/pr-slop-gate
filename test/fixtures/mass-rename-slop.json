@@ -1,0 +1,37 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event. Hand-authored: a low-value 'reorganize project structure' PR — many PURE file renames with ~no content change. Not captured from a real PR.",
+  "action": "opened",
+  "number": 5303,
+  "pull_request": {
+    "number": 5303,
+    "title": "Reorganize project structure for better maintainability",
+    "body": "Reorganized the project structure to follow best practices and improve maintainability.",
+    "state": "open",
+    "draft": false,
+    "additions": 6,
+    "deletions": 6,
+    "changed_files": 12,
+    "commits": 1,
+    "user": { "login": "reorg-driveby", "type": "User" },
+    "head": { "ref": "reorg", "sha": "5555555555555555555555555555555555555555" },
+    "base": { "ref": "main", "sha": "6666666666666666666666666666666666666666" },
+    "labels": []
+  },
+  "repository": { "full_name": "acme/widget", "default_branch": "main" },
+  "_files": [
+    { "filename": "src/core/a.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/b.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/c.js", "status": "renamed", "additions": 1, "deletions": 1, "patch": "" },
+    { "filename": "src/core/d.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/e.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/f.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/g.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/h.js", "status": "renamed", "additions": 1, "deletions": 1, "patch": "" },
+    { "filename": "src/core/i.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/j.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "src/core/k.js", "status": "renamed", "additions": 0, "deletions": 0, "patch": "" },
+    { "filename": "README.md", "status": "modified", "additions": 2, "deletions": 2, "patch": "@@ -1 +1 @@\n-src/a.js\n+src/core/a.js\n" }
+  ],
+  "_commits": [{ "commit": { "message": "reorganize" } }],
+  "_diff": ""
+}

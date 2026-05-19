@@ -1,0 +1,31 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event. Hand-authored: an AI emitted a markdown SECTION SCAFFOLD (Summary/Changes/Testing/Checklist) and left every section hollow or filler. Large diff. Not captured from a real PR.",
+  "action": "opened",
+  "number": 5101,
+  "pull_request": {
+    "number": 5101,
+    "title": "Refactor modules",
+    "body": "## Summary\n\nN/A\n\n## Changes Made\n\n- Various improvements\n\n## Testing\n\nTBD\n\n## Checklist\n\n- [ ] Tests added\n- [ ] Docs updated",
+    "state": "open",
+    "draft": false,
+    "additions": 620,
+    "deletions": 540,
+    "changed_files": 14,
+    "commits": 2,
+    "user": { "login": "scaffold-bot-7", "type": "User" },
+    "head": { "ref": "refactor", "sha": "1111111111111111111111111111111111111111" },
+    "base": { "ref": "main", "sha": "2222222222222222222222222222222222222222" },
+    "labels": []
+  },
+  "repository": { "full_name": "acme/widget", "default_branch": "main" },
+  "_files": [
+    { "filename": "src/a.js", "status": "modified", "additions": 120, "deletions": 100, "patch": "@@ -1 +1 @@\n-const a = compute(1);\n+const a = recompute(2);\n" },
+    { "filename": "src/b.js", "status": "modified", "additions": 110, "deletions": 95, "patch": "@@ -1 +1 @@\n-foo();\n+bar();\n" },
+    { "filename": "src/c.js", "status": "modified", "additions": 130, "deletions": 110, "patch": "@@ -1 +1 @@\n-x()\n+y()\n" }
+  ],
+  "_commits": [
+    { "commit": { "message": "wip" } },
+    { "commit": { "message": "Update" } }
+  ],
+  "_diff": ""
+}

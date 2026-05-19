@@ -1,0 +1,30 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event. Hand-authored: a GENUINE contributor who used the repo's PR template AND filled every section with real, specific content. Must NOT trip templateBody/intentMismatch/commitQuality — the structure is present AND substantive. Not captured from a real PR.",
+  "action": "opened",
+  "number": 412,
+  "pull_request": {
+    "number": 412,
+    "title": "Fix integer overflow in checksum for payloads > 2GB",
+    "body": "## Summary\n\nThe CRC accumulator used a 32-bit signed int, so payloads over ~2GB wrapped negative and produced a wrong checksum (reported in #401).\n\n## Changes Made\n\n- Switch the accumulator in `src/checksum.js` to BigInt\n- Mask back to 32 bits at the end so the wire format is unchanged\n- Add `test/checksum_large.test.js` exercising a 2.5GB synthetic buffer via a stream stub\n\n## Testing\n\nNew test fails on `main` (got -1247... ), passes here. Ran the full suite locally: 318 passing, no regressions.\n\n## Checklist\n\n- [x] Tests added\n- [x] No public API / wire-format change",
+    "state": "open",
+    "draft": false,
+    "additions": 58,
+    "deletions": 9,
+    "changed_files": 2,
+    "commits": 2,
+    "user": { "login": "maria-contrib", "type": "User" },
+    "head": { "ref": "fix/crc-overflow", "sha": "7777777777777777777777777777777777777777" },
+    "base": { "ref": "main", "sha": "8888888888888888888888888888888888888888" },
+    "labels": []
+  },
+  "repository": { "full_name": "acme/widget", "default_branch": "main" },
+  "_files": [
+    { "filename": "src/checksum.js", "status": "modified", "additions": 18, "deletions": 9, "patch": "@@ -10,7 +10,7 @@\n-  let acc = 0;\n+  let acc = 0n;\n   for (const byte of buf) acc = (acc * 31n + BigInt(byte)) & 0xffffffffn;\n-  return acc >>> 0;\n+  return Number(acc & 0xffffffffn);\n" },
+    { "filename": "test/checksum_large.test.js", "status": "added", "additions": 40, "deletions": 0, "patch": "@@ -0,0 +1,40 @@\n+import { test, expect } from 'vitest';\n+import { crc } from '../src/checksum.js';\n+test('2.5GB payload does not overflow', () => { /* stream stub */ });\n" }
+  ],
+  "_commits": [
+    { "commit": { "message": "Use BigInt accumulator to avoid 32-bit CRC overflow on >2GB payloads" } },
+    { "commit": { "message": "Add large-payload regression test for checksum overflow" } }
+  ],
+  "_diff": ""
+}

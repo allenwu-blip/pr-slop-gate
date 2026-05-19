@@ -1,0 +1,66 @@
+# Copy this into the ROOT of your repo as `.pr-slop-gate.yml`
+# (a `.github/.pr-slop-gate.yml` fallback is also read).
+#
+# EVERY KEY IS OPTIONAL. With no file at all, pr-slop-gate uses conservative
+# built-in defaults. A bad value never tightens the gate — it is ignored and a
+# warning is printed in the Action log (the gate stays at the safe default).
+#
+# Precedence (lowest → highest):
+#   built-in defaults  <  policy-pack  <  the keys you set below  <  Action inputs
+#
+# This sample is intentionally verbose for documentation. A real file is
+# usually 3–10 lines (often just `policy-pack: oss-strict`).
+
+version: 1
+
+# --- Option A: start from a named, opinionated pack -------------------------
+# Built-in packs: oss-default | oss-strict | oss-lenient | docs-heavy
+# (An unknown name is ignored with a warning — custom/managed packs are a
+#  hosted-tier feature and do NOT change the free Action's behavior.)
+policy-pack: oss-default
+
+# --- Option B (or also): hand-tune ------------------------------------------
+# Score bands. Must satisfy label ≤ comment ≤ close (auto-repaired + warned
+# if you misorder them, so the gate is never MORE aggressive than you wrote).
+thresholds:
+  label: 0.5     # ≥ this → apply the label
+  comment: 0.65  # ≥ this → label + post the polite templated comment
+  close: 0.85    # ≥ this → label + comment + close (only if auto-close: true)
+
+# Blend of the deterministic heuristics vs the optional LLM grader.
+weights:
+  heuristic: 0.6
+  grader: 0.4    # forced to 0 automatically if no Anthropic key is configured
+
+# Per-signal weight multipliers, each in [0,2] (1.0 = default, 0 = disable).
+# Known signals: aiBoilerplate, sprawl, churn, lowEffortBody, title,
+#                templateBody, commitQuality, intentMismatch, massRename
+rules:
+  aiBoilerplate: 1.0
+  templateBody: 1.0
+  intentMismatch: 1.0
+  # churn: 0      # e.g. disable churn detection for a formatting-heavy repo
+
+# Always-exempt logins (bots, core team). Merged with the Action's `allowlist`
+# input and with authors auto-derived from the repo's merged PRs.
+allowlist:
+  - dependabot[bot]
+  - renovate[bot]
+
+# Extra logins to treat as trusted (already had a PR merged elsewhere, etc.).
+trusted-authors:
+  - your-core-maintainer
+
+# Paths excluded from churn / sprawl / intent-mismatch scoring. Glob subset:
+#   "dir/**" or "dir/" = prefix · "*.ext" = suffix · "EXACT.txt" = exact
+exempt-paths:
+  - "docs/**"
+  - "*.md"
+  - "vendor/"
+
+# Non-destructive by default. Only enable after observing dry-run for a while.
+auto-close: false
+
+# Per-decision label override (a hosted tier extends routing further).
+routing:
+  label: possible-ai-slop

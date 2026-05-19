@@ -1,0 +1,32 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event payload for tests. Hand-authored to represent a focused, well-described fix from a returning contributor. Not captured from a real PR.",
+  "action": "opened",
+  "number": 318,
+  "pull_request": {
+    "number": 318,
+    "title": "Fix race condition in cache eviction when TTL is 0",
+    "body": "Fixes #311.\n\nWhen `ttl=0` the eviction timer was scheduled with a 0ms delay, which under load could fire before the entry was inserted, leaving a dangling key. This reorders insertion before timer scheduling and adds a regression test in `test/cache_ttl.test.js`.\n\nRepro: run the new test against `main` — it fails ~30% of the time; passes deterministically with this change.\n\nNo public API change.",
+    "state": "open",
+    "draft": false,
+    "additions": 41,
+    "deletions": 12,
+    "changed_files": 2,
+    "commits": 3,
+    "user": {
+      "login": "maria-contrib",
+      "type": "User"
+    },
+    "head": { "ref": "fix/cache-ttl-race", "sha": "cccccccccccccccccccccccccccccccccccccccc" },
+    "base": { "ref": "main", "sha": "dddddddddddddddddddddddddddddddddddddddd" },
+    "labels": []
+  },
+  "repository": {
+    "full_name": "acme/widget",
+    "default_branch": "main"
+  },
+  "_files": [
+    { "filename": "src/cache.js", "status": "modified", "additions": 14, "deletions": 12, "patch": "@@ -40,9 +40,11 @@ class Cache {\n   set(key, val, ttl) {\n-    if (ttl > 0) this._scheduleEvict(key, ttl);\n     this._store.set(key, val);\n+    if (ttl > 0) this._scheduleEvict(key, ttl);\n+    else if (ttl === 0) this._evictNextTick(key);\n   }\n" },
+    { "filename": "test/cache_ttl.test.js", "status": "added", "additions": 27, "deletions": 0, "patch": "@@ -0,0 +1,27 @@\n+import { test, expect } from 'vitest';\n+import { Cache } from '../src/cache.js';\n+test('ttl=0 does not leave dangling key under load', async () => {\n+  const c = new Cache();\n+  for (let i=0;i<1000;i++) c.set('k'+i, i, 0);\n+  expect(c.size()).toBe(0);\n+});\n" }
+  ],
+  "_diff": "diff --git a/src/cache.js b/src/cache.js\n@@ -40,9 +40,11 @@ class Cache {\n   set(key, val, ttl) {\n-    if (ttl > 0) this._scheduleEvict(key, ttl);\n     this._store.set(key, val);\n+    if (ttl > 0) this._scheduleEvict(key, ttl);\n+    else if (ttl === 0) this._evictNextTick(key);\n   }\n"
+}

@@ -1,0 +1,99 @@
+name: "PR Slop Gate"
+description: "AI-aware pull-request triage: scores PRs for AI slop (diff heuristics + an LLM grader vs your CONTRIBUTING rules), then labels / comments / optionally closes — with a trusted-contributor exemption to protect genuine first-time contributors."
+author: "pr-slop-gate"
+branding:
+  icon: "filter"
+  color: "purple"
+
+inputs:
+  github-token:
+    description: "Token used to label/comment/close and read PR files. Use the workflow's GITHUB_TOKEN."
+    required: false
+    default: ${{ github.token }}
+  anthropic-api-key:
+    description: "Anthropic API key for the LLM grader. OPTIONAL — if omitted, the Action runs heuristic-only (no LLM, no network for grading). Pass via a secret, never inline. Anthropic only; OpenAI is not supported."
+    required: false
+    default: ""
+  anthropic-model:
+    description: "Anthropic model id for the grader."
+    required: false
+    default: "claude-sonnet-4-5"
+  disable-grader:
+    description: "Set 'true' to force heuristic-only even if a key is present."
+    required: false
+    default: "false"
+  config-path:
+    description: "Path (in the PR's repo) to the optional .pr-slop-gate.yml policy file. Absent/unreadable → built-in defaults. A .github/ fallback is also tried."
+    required: false
+    default: ".pr-slop-gate.yml"
+  allowlist:
+    description: "Comma/newline-separated logins always exempt from flagging (e.g. bots, core team)."
+    required: false
+    default: ""
+  prior-merged-authors:
+    description: "Comma/newline-separated logins to treat as trusted (already had a PR merged). Merged with auto-derived authors unless auto-derive is off."
+    required: false
+    default: ""
+  auto-derive-prior-authors:
+    description: "Auto-derive trusted authors from this repo's previously-merged PRs via the API."
+    required: false
+    default: "true"
+  label:
+    description: "Label applied to flagged PRs."
+    required: false
+    default: "possible-ai-slop"
+  feedback-label:
+    description: "Label maintainers/contributors add to report a misfire (verbatim feedback hook)."
+    required: false
+    default: "pr-slop-gate-feedback"
+  label-threshold:
+    description: "Score >= this → apply the label. [0..1]"
+    required: false
+    default: "0.5"
+  comment-threshold:
+    description: "Score >= this → label + post the polite templated comment. [0..1]"
+    required: false
+    default: "0.65"
+  close-threshold:
+    description: "Score >= this → label + comment + close (only if auto-close is true). [0..1]"
+    required: false
+    default: "0.85"
+  heuristic-weight:
+    description: "Weight of the deterministic diff heuristics in the blended score. [0..1]"
+    required: false
+    default: "0.6"
+  grader-weight:
+    description: "Weight of the LLM grader in the blended score. [0..1] (forced 0 if no key / disabled)."
+    required: false
+    default: "0.4"
+  auto-close:
+    description: "If 'true', PRs at/above close-threshold are auto-closed. Default false (non-destructive)."
+    required: false
+    default: "false"
+  analytics-log:
+    description: "Optional path to append a one-line JSON analytics record per PR (JSONL). For self-hosted aggregate reporting. No network/billing — see README."
+    required: false
+    default: ""
+  dry-run:
+    description: "If 'true', compute and output the decision but DO NOT label/comment/close. Recommended for first rollout."
+    required: false
+    default: "false"
+
+outputs:
+  score:
+    description: "Blended AI-slop score in [0,1] (4 dp)."
+  decision:
+    description: "One of: allow | label | comment | close."
+  label:
+    description: "Label applied (empty if none)."
+  analytics:
+    description: "One-line JSON per-PR analytics record (score, signals, decision, provenance). Stable schema; the data a hosted/self-hosted dashboard renders."
+
+runs:
+  using: "node20"
+  main: "src/run.js"
+
+# Required permissions in the calling workflow:
+#   permissions:
+#     pull-requests: write   # label / comment / close
+#     contents: read         # read CONTRIBUTING / files

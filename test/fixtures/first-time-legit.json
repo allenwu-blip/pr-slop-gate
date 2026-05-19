@@ -1,0 +1,31 @@
+{
+  "_note": "Synthetic GitHub `pull_request` event payload for tests. Hand-authored to represent a SMALL, well-described, genuine first-time contribution (author has zero prior merges). Must NOT be auto-flagged just for being new, and must NOT be auto-exempt either. Not captured from a real PR.",
+  "action": "opened",
+  "number": 77,
+  "pull_request": {
+    "number": 77,
+    "title": "Correct typo in error message: 'recieved' -> 'received'",
+    "body": "Spotted a small typo in the connection error path while debugging my own integration. Single-word fix, no behavior change.\n\nHappy to add a test if you'd like one but this is a string-only change.",
+    "state": "open",
+    "draft": false,
+    "additions": 1,
+    "deletions": 1,
+    "changed_files": 1,
+    "commits": 1,
+    "user": {
+      "login": "first-timer-jess",
+      "type": "User"
+    },
+    "head": { "ref": "typo-fix", "sha": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" },
+    "base": { "ref": "main", "sha": "ffffffffffffffffffffffffffffffffffffffff" },
+    "labels": []
+  },
+  "repository": {
+    "full_name": "acme/widget",
+    "default_branch": "main"
+  },
+  "_files": [
+    { "filename": "src/net.js", "status": "modified", "additions": 1, "deletions": 1, "patch": "@@ -88,7 +88,7 @@ function onError(e) {\n-  log.warn('recieved malformed frame');\n+  log.warn('received malformed frame');\n }\n" }
+  ],
+  "_diff": "diff --git a/src/net.js b/src/net.js\n@@ -88,7 +88,7 @@ function onError(e) {\n-  log.warn('recieved malformed frame');\n+  log.warn('received malformed frame');\n }\n"
+}
