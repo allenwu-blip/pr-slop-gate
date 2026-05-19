@@ -1,5 +1,5 @@
 name: "PR Slop Gate"
-description: "AI-aware pull-request triage: scores PRs for AI slop (diff heuristics + an LLM grader vs your CONTRIBUTING rules), then labels / comments / optionally closes — with a trusted-contributor exemption to protect genuine first-time contributors."
+description: "Scores pull requests for AI slop (diff heuristics + optional LLM grader), then labels, comments or optionally closes."
 author: "pr-slop-gate"
 branding:
   icon: "filter"
